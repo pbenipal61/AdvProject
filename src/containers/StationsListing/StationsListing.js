@@ -4,7 +4,7 @@ class StationsListing extends Component {
   render() {
     return (
       <div className={styles.main}>
-        <div className={styles.title}>ELECTRICMESH</div>
+        <div className={styles.title}>ELECTROMESH</div>
         <div className={styles.tagline}>
           for all your e-vehicle charging needs
         </div>

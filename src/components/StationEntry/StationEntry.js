@@ -1,5 +1,12 @@
 import React from "react";
-
-const StationEntry = props => {};
+import styles from "./StationEntry.module.css";
+const StationEntry = props => {
+  return (
+    <div>
+      <div className={styles.address}>{props.address}</div>
+      <div></div>
+    </div>
+  );
+};
 
 export default StationEntry;

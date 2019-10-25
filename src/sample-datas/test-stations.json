@@ -1,0 +1,13 @@
+{
+  "stations": [
+    {
+      "address": "test address",
+      "city": "Test city",
+      "speed": "test speed",
+      "connectorType": "test type",
+      "currentEngagement": {
+        "status": false
+      }
+    }
+  ]
+}
