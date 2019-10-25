@@ -50,4 +50,21 @@
 }
 
 .authButtons {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.authButton {
+  margin: 2%;
+  height: 25px;
+  width: auto;
+}
+
+.registerScene {
+  display: flex;
+  flex-direction: column;
+}
+
+.registerModule {
+  display: flex;
 }

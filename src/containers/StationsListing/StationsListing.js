@@ -3,7 +3,12 @@ import styles from "./StationsListing.module.css";
 import StationEntry from "../../components/StationEntry/StationEntry";
 const axios = require("axios");
 class StationsListing extends Component {
-  state = { stations: [], unFilteredStations: [], chargingStation: null };
+  state = {
+    stations: [],
+    unFilteredStations: [],
+    chargingStation: null,
+    user: {}
+  };
   async componentDidMount() {
     const url = "http://18.216.165.155:3000/v1/stations/all";
     const data = await axios.get(url);
@@ -14,9 +19,13 @@ class StationsListing extends Component {
       currentScene: "search"
     }));
   }
+  changeToRegisterScene = () => {
+    this.setState(() => ({
+      currentScene: "register"
+    }));
+  };
 
   changeToChargeScene = station => {
-    console.log(station);
     this.setState(() => ({
       currentScene: "charge",
       chargingStation: station
@@ -101,14 +110,53 @@ class StationsListing extends Component {
       </div>
     );
 
-    const scene =
-      this.state.currentScene === "search" ? searchScene : chargeScene;
+    const registerScene = (
+      <div className={styles.registerScene}>
+        <div className={styles.registerModule}>
+          <div>Full Name: </div> <input type="text"></input>
+        </div>
+        <div className={styles.registerModule}>
+          <div>Email: </div> <input type="text"></input>
+        </div>
+        <div className={styles.registerModule}>
+          <div>Password: </div> <input type="text"></input>
+        </div>
+        <div>
+          <div className={styles.registerModule}>
+            <div>Confirm Password: </div>
+            <input type="text"></input>
+          </div>
+        </div>
+      </div>
+    );
+    let scene = <div></div>;
+
+    switch (this.state.currentScene) {
+      case "search":
+        scene = searchScene;
+        break;
+      case "charge":
+        scene = chargeScene;
+        break;
+
+      case "register":
+        scene = registerScene;
+        break;
+      default:
+        scene = <div></div>;
+        break;
+    }
     return (
       <div className={styles.main}>
         <div>
           <div className={styles.authButtons}>
-            <button>Register</button>
-            <button>Login</button>
+            <button
+              className={styles.authButton}
+              onClick={this.changeToRegisterScene}
+            >
+              Register
+            </button>
+            <button className={styles.authButton}>Login</button>
           </div>
         </div>
         <div className={styles.title}>ELECTROMESH</div>
