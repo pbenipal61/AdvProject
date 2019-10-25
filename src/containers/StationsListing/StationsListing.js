@@ -25,13 +25,19 @@ class StationsListing extends Component {
     }));
   };
 
+  changeToLoginScene = () => {
+    this.setState(() => ({
+      currentScene: "login"
+    }));
+  };
+
   changeToChargeScene = station => {
     this.setState(() => ({
       currentScene: "charge",
       chargingStation: station
     }));
   };
-  inputChangedHandler = event => {
+  searchInputChangedHandler = event => {
     const filter = event.target.value;
 
     const filteredStations = this.state.unFilteredStations.filter(item => {
@@ -50,6 +56,70 @@ class StationsListing extends Component {
     });
   };
 
+  registerInputChangeHandler = event => {
+    const title = event.target.title;
+    const value = event.target.value;
+    const obj = { ...this.state.user };
+    obj[title] = value;
+    this.setState((prevState, props) => ({
+      user: {
+        ...obj
+      }
+    }));
+  };
+  registerHandler = async event => {
+    const userObj = this.state.user;
+    const keys = Object.keys(userObj);
+    const filteredKeys = keys.filter(key => userObj[key]);
+
+    if (filteredKeys.length !== 4) {
+      return;
+    }
+
+    if (userObj.password === userObj.confirmPassword) {
+      //   console.log(userObj);
+      const url = "http://18.216.165.155:3000/v1/register";
+      const userData = await axios.post(url, userObj);
+      console.log(userData.data);
+      this.setState((prevState, props) => ({
+        user: {
+          ...userData.data
+        },
+        currentScene: "search"
+      }));
+
+      //   console.log(this.state);
+    } else {
+      return;
+    }
+  };
+
+  loginHandler = async event => {
+    const url = "http://18.216.165.155:3000/v1/login";
+    const userObj = this.state.user;
+    const keys = Object.keys(userObj);
+    const filteredKeys = keys.filter(key => userObj[key]);
+    if (filteredKeys.length < 2) {
+      return;
+    }
+    const userData = await axios.post(url, userObj);
+    console.log(userData.data);
+    this.setState((prevState, props) => ({
+      user: {
+        ...userData.data
+      },
+      currentScene: "search"
+    }));
+
+    console.log(this.state);
+  };
+
+  logoutHandler = async event => {
+    this.setState((prevState, props) => ({
+      user: {},
+      currentScene: "search"
+    }));
+  };
   render() {
     const stationEntries = this.state.stations.map(station => (
       <StationEntry
@@ -64,7 +134,7 @@ class StationsListing extends Component {
         <input
           type="text"
           className={styles.searchBar}
-          onChange={this.inputChangedHandler}
+          onChange={this.searchInputChangedHandler}
           placeholder="type in city or address of the station"
         ></input>
         <div className={styles.stationsListings}>{stationEntries}</div>
@@ -113,20 +183,70 @@ class StationsListing extends Component {
     const registerScene = (
       <div className={styles.registerScene}>
         <div className={styles.registerModule}>
-          <div>Full Name: </div> <input type="text"></input>
+          <div>Full Name: </div>{" "}
+          <input
+            type="text"
+            title="name"
+            onChange={this.registerInputChangeHandler}
+          ></input>
         </div>
         <div className={styles.registerModule}>
-          <div>Email: </div> <input type="text"></input>
+          <div>Email: </div>{" "}
+          <input
+            type="text"
+            title="email"
+            onChange={this.registerInputChangeHandler}
+          ></input>
         </div>
         <div className={styles.registerModule}>
-          <div>Password: </div> <input type="text"></input>
+          <div>Password: </div>{" "}
+          <input
+            type="password"
+            title="password"
+            onChange={this.registerInputChangeHandler}
+          ></input>
         </div>
         <div>
           <div className={styles.registerModule}>
             <div>Confirm Password: </div>
-            <input type="text"></input>
+            <input
+              type="password"
+              title="confirmPassword"
+              onChange={this.registerInputChangeHandler}
+            ></input>
           </div>
         </div>
+
+        <button
+          className={styles.registerButton}
+          onClick={this.registerHandler}
+        >
+          Register
+        </button>
+      </div>
+    );
+    const loginScene = (
+      <div className={styles.registerScene}>
+        <div className={styles.registerModule}>
+          <div>Email: </div>{" "}
+          <input
+            type="text"
+            title="email"
+            onChange={this.registerInputChangeHandler}
+          ></input>
+        </div>
+        <div className={styles.registerModule}>
+          <div>Password: </div>{" "}
+          <input
+            type="password"
+            title="password"
+            onChange={this.registerInputChangeHandler}
+          ></input>
+        </div>
+
+        <button className={styles.registerButton} onClick={this.loginHandler}>
+          Login
+        </button>
       </div>
     );
     let scene = <div></div>;
@@ -142,23 +262,33 @@ class StationsListing extends Component {
       case "register":
         scene = registerScene;
         break;
+
+      case "login":
+        scene = loginScene;
+        break;
       default:
         scene = <div></div>;
         break;
     }
+
+    const loggedInStatus = this.state.user.token ? (
+      <button onClick={this.logoutHandler}>Logout</button>
+    ) : (
+      <div className={styles.authButtons}>
+        <button
+          className={styles.authButton}
+          onClick={this.changeToRegisterScene}
+        >
+          Register
+        </button>
+        <button className={styles.authButton} onClick={this.changeToLoginScene}>
+          Login
+        </button>
+      </div>
+    );
     return (
       <div className={styles.main}>
-        <div>
-          <div className={styles.authButtons}>
-            <button
-              className={styles.authButton}
-              onClick={this.changeToRegisterScene}
-            >
-              Register
-            </button>
-            <button className={styles.authButton}>Login</button>
-          </div>
-        </div>
+        <div>{loggedInStatus}</div>
         <div className={styles.title}>ELECTROMESH</div>
         <div className={styles.tagline}>
           for all your e-vehicle charging needs

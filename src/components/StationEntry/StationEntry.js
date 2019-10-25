@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./StationEntry.module.css";
 const StationEntry = props => {
-  console.log(props.station);
   return (
     <div className={styles.main} onClick={props.onClick}>
       <div

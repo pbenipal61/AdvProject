@@ -63,8 +63,13 @@
 .registerScene {
   display: flex;
   flex-direction: column;
+  align-content: center;
+  margin: auto;
 }
 
 .registerModule {
   display: flex;
+  margin: auto;
+}
+.registerButton {
 }
