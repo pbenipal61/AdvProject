@@ -16,6 +16,7 @@ const StationEntry = props => {
             : `Power: ${props.station.speed.min}-${props.station.speed.max}kW`}
         </div>
       </div>
+      <div>{`Price: ${props.station.price}`}</div>
     </div>
   );
 };

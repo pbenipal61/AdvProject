@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styles from "./StationsListing.module.css";
 import StationEntry from "../../components/StationEntry/StationEntry";
-const axios = require("axios");
+import axios from "axios";
 class StationsListing extends Component {
   state = {
     stations: [],

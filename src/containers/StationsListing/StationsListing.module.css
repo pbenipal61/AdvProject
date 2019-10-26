@@ -31,6 +31,8 @@
 }
 
 .stationsListings {
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
 .chargingScene {
